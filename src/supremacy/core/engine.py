@@ -4,11 +4,14 @@ import pyglet
 import time
 import os
 
+import xmlrpc
+
 from .. import config
 from .base import BaseProxy
 from .game_map import GameMap, MapView
 from .graphics import Graphics
 from .player import Player
+from .server import AiServer
 from .tools import ReadOnly
 from .vehicles import VehicleProxy
 
@@ -20,7 +23,8 @@ class Engine:
                  speedup: int = 1,
                  safe=False,
                  high_contrast=False,
-                 test=False):
+                 test=False,
+                 nworkers=1):
 
         config.generate_images(nplayers=len(players))
 
@@ -39,9 +43,20 @@ class Engine:
         _scores = self.read_scores(players=players, test=test)
 
         player_locations = self.game_map.add_players(players=players)
+
+        self.player_ais = {
+            p.creator: AiServer(ai=p, number=i)
+            for i, p in enumerate(players)
+        }
+
+        self.clients = {
+            name: xmlrpc.client.ServerProxy(f"http://localhost:{server.port_number}/")
+            for name, server in self.player_ais.items()
+        }
+
         self.players = {
-            p.creator: Player(ai=p,
-                              location=player_locations[p.creator],
+            p.creator: Player(location=player_locations[p.creator],
+                              name=p.creator,
                               number=i,
                               team=p.creator,
                               batch=self.graphics.main_batch,

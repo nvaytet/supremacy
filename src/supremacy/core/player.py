@@ -9,8 +9,8 @@ from .game_map import MapView
 class Player:
 
     def __init__(self,
-                 ai,
                  location,
+                 name,
                  number,
                  team,
                  batch,
@@ -19,10 +19,10 @@ class Player:
                  nplayers,
                  base_locations,
                  high_contrast=False):
-        self.ai = ai
-        self.ai.team = team
-        self.ai.number = number
-        self.name = ai.creator
+        # self.ai = ai
+        # self.ai.team = team
+        # self.ai.number = number
+        self.name = name
         self.hq = location
         self.number = number
         self.team = team

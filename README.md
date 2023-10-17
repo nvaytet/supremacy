@@ -1,27 +1,6 @@
 ![supremacy](https://github.com/europython2023gametournament/supremacy/assets/39047984/fd147b1a-252b-4aed-b949-e2cb943f80dd)
 
-# EuroPython 2023 AI game tournament
-
-## What is the tournament about?
-
-We have created a video game that is designed to be played by a small python program, rather than a human.
-Conference attendees can participate in a tournament where they (either alone or in a team) each submit a bot that will play the game, and at the end of the conference, we will have a tournament session where everyone can come and watch our strange creations play against each other (either brilliantly or it may all go wrong!).
-
-## Disclaimer
-
-The topic of the game is a sci-fi war on a foreign planet, set far in the future.
-We do not condone war and violence, we just want to make a fun event for EuroPython participants.
-
-## How to participate?
-
-- Register your team: fill in the form at https://forms.gle/v2s9oHZ1xLTUo5ov7 (30 spots available)
-- You will be given a private GH repository in the `europython2023gametournament` organisation
-- Read the game rules below and start working on your bot
-- Ask questions on the Discord forum `ai-game-tournament`
-- Creating alliances is authorized (betrayals are also allowed!)
-- Once your bot is ready, make sure you copy it into the `main` branch of the repo you were given
-- Deadline is 15:00 on Friday July 21st
-- Tournament will be 15:30 - 16:45 on Friday July 21st in the Open Space area
+# Supremacy
 
 ## TL;DR
 
@@ -37,9 +16,7 @@ cd tests/
 python test.py
 ```
 
-## The game: Supremacy
-
-Preview
+## Game preview
 
 <table>
   <tr>

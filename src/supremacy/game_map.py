@@ -32,6 +32,9 @@ class GameMap:
         norm = Normalize()
         if high_contrast:
             to_image = np.flipud(self.array * 255)
+            to_image = np.broadcast_to(
+                to_image.reshape(to_image.shape + (1,)), to_image.shape + (3,)
+            )
         else:
             gy, gx = np.gradient(np.flipud(self.array))
             contour = np.abs(gy) + np.abs(gx)
@@ -55,9 +58,13 @@ class GameMap:
             np.arange(self.nseeds), size=len(players), replace=False
         )
         locations = {}
+        niter = 0
         for n, player in enumerate(players):
             not_set = True
             while not_set:
+                niter += 1
+                if niter > 500:
+                    raise RuntimeError("Could not find a suitable location for a base")
                 direction = np.random.randint(4)
                 i = self.xseed[inds[n]]
                 j = self.yseed[inds[n]]

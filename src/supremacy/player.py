@@ -136,7 +136,7 @@ class Player:
 
     def make_avatar_base_image(self):
         self.avatar_base_image = Image.new("RGBA", (100, 24), (0, 0, 0, 0))
-        key = "cross" if self.dead else "player"
+        key = "skull" if self.dead else "player"
         self.avatar_base_image.paste(config.images[f"{key}_{self.number}"], (0, 0))
         self.avatar_base_image.paste(
             text_to_raw_image(
@@ -155,7 +155,8 @@ class Player:
         img.paste(self.avatar_base_image, (0, 0))
         img.paste(
             text_to_raw_image(
-                f"{self.score_position + 1}. "
+                f"  {'  ' if self.score_position < 9 else ''}"
+                f"{self.score_position + 1}.   "
                 f"{self.global_score}[{self.score_this_round}]",
                 width=100,
                 height=24,
@@ -190,7 +191,9 @@ class Player:
         self.make_avatar_base_image()
 
     def dump_map(self):
-        im = Image.fromarray((self.game_map.array.astype(np.uint8) + 1) * 127)
+        im = Image.fromarray(
+            np.flipud((self.game_map.array.astype(np.uint8) + 1) * 127)
+        )
         im.save(f"{self.team}_map.png")
 
     def init_cross_animation(self):

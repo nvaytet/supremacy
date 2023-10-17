@@ -3,12 +3,13 @@
 import uuid
 from typing import Any
 
+import numpy as np
 import pyglet
 
 
 from . import config
 from .tools import distance_on_plane, distance_on_torus, wrap_position
-from .vehicles import Jet, Ship, Tank
+from .vehicles import Jet, Ship, Tank, VehicleProxy
 
 
 class Base:
@@ -55,10 +56,10 @@ class Base:
         if self.high_contrast:
             rgb = config.colors[self.number]
             self.shape = pyglet.shapes.Rectangle(
-                x=self.x - config.competing_mine_radius,
-                y=self.y - config.competing_mine_radius,
-                width=config.competing_mine_radius * 2,
-                height=config.competing_mine_radius * 2,
+                x=self.screen_x - (config.competing_mine_radius * config.scaling),
+                y=self.screen_y - (config.competing_mine_radius * config.scaling),
+                width=config.competing_mine_radius * 2 * config.scaling,
+                height=config.competing_mine_radius * 2 * config.scaling,
                 color=tuple(int(round(c * 255)) for c in rgb[:-1]) + (50,),
                 batch=batch,
             )
@@ -161,6 +162,7 @@ class Base:
                 "mines": len(self.mines),
                 "crystal": self.crystal,
                 "uid": self.uid,
+                "position": self.get_position(),
             }
         return self._as_info
 
@@ -203,7 +205,7 @@ class Base:
             return
         print(f"Player {self.team} is building a TANK at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
-        self.owner.tanks[uid] = Tank(
+        tank = Tank(
             x=self.x + self.tank_offset[0],
             y=self.y + self.tank_offset[1],
             team=self.team,
@@ -213,8 +215,9 @@ class Base:
             owner=self,
             uid=uid,
         )
+        self.owner.tanks[uid] = tank
         self.crystal -= config.cost["tank"]
-        return uid
+        return VehicleProxy(tank)
 
     def build_ship(self, heading: float) -> str:
         """
@@ -230,7 +233,7 @@ class Base:
             return
         print(f"Player {self.team} is building a SHIP at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
-        self.owner.ships[uid] = Ship(
+        ship = Ship(
             x=self.x + self.ship_offset[0],
             y=self.y + self.ship_offset[1],
             team=self.team,
@@ -240,8 +243,9 @@ class Base:
             owner=self,
             uid=uid,
         )
+        self.owner.ships[uid] = ship
         self.crystal -= config.cost["ship"]
-        return uid
+        return VehicleProxy(ship)
 
     def build_jet(self, heading: float) -> str:
         """
@@ -257,7 +261,7 @@ class Base:
             return
         print(f"Player {self.team} is building a JET at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
-        self.owner.jets[uid] = Jet(
+        jet = Jet(
             x=self.x,
             y=self.y,
             team=self.team,
@@ -267,8 +271,9 @@ class Base:
             owner=self,
             uid=uid,
         )
+        self.owner.jets[uid] = jet
         self.crystal -= config.cost["jet"]
-        return uid
+        return VehicleProxy(jet)
 
     def get_distance(self, x: float, y: float, shortest=True) -> float:
         """
@@ -291,6 +296,12 @@ class Base:
             return distance_on_plane(self.x, self.y, x, y)
         else:
             return distance_on_torus(self.x, self.y, x, y)
+
+    def get_position(self) -> np.ndarray:
+        """
+        Return the curent position of the vehicle (x, y).
+        """
+        return np.array([self.x, self.y])
 
 
 class BaseProxy:

@@ -6,14 +6,13 @@ import numpy as np
 CREATOR = "TeamName"
 
 
-# This is the AI bot that will be instantiated for the competition
 class PlayerAi:
+    """
+    This is the AI bot that will be instantiated for the competition.
+    """
+
     def __init__(self):
         self.team = CREATOR  # Mandatory attribute
-
-        # Record the previous positions of all my vehicles
-        self.previous_positions = {}
-        # Record the number of tanks and ships I have at each base
         self.ntanks = {}
         self.nships = {}
 
@@ -80,31 +79,28 @@ class PlayerAi:
 
         # Iterate through all my bases (vehicles belong to bases)
         for base in myinfo["bases"]:
-            # If this is a new base, initialize the tank & ship counters
-            if base.uid not in self.ntanks:
-                self.ntanks[base.uid] = 0
-            if base.uid not in self.nships:
-                self.nships[base.uid] = 0
+            # Bookkeeping
+            uid = base.uid
+            if uid not in self.ntanks:
+                self.ntanks[uid] = 0
+                self.nships[uid] = 0
+
             # Firstly, each base should build a mine if it has less than 3 mines
             if base.mines < 3:
                 if base.crystal > base.cost("mine"):
                     base.build_mine()
-            # Secondly, each base should build a tank if it has less than 5 tanks
-            elif base.crystal > base.cost("tank") and self.ntanks[base.uid] < 5:
-                # build_tank() returns the uid of the tank that was built
-                tank_uid = base.build_tank(heading=360 * np.random.random())
-                # Add 1 to the tank counter for this base
-                self.ntanks[base.uid] += 1
-            # Thirdly, each base should build a ship if it has less than 3 ships
-            elif base.crystal > base.cost("ship") and self.nships[base.uid] < 3:
-                # build_ship() returns the uid of the ship that was built
-                ship_uid = base.build_ship(heading=360 * np.random.random())
-                # Add 1 to the ship counter for this base
-                self.nships[base.uid] += 1
-            # If everything else is satisfied, build a jet
-            elif base.crystal > base.cost("jet"):
-                # build_jet() returns the uid of the jet that was built
-                jet_uid = base.build_jet(heading=360 * np.random.random())
+            # If we have enough mines, pick something at random
+            else:
+                if self.ntanks[uid] < 5:
+                    if base.crystal > base.cost("tank"):
+                        tank = base.build_tank(heading=360 * np.random.random())
+                        self.ntanks[uid] += 1
+                elif self.nships[uid] < 3:
+                    if base.crystal > base.cost("ship"):
+                        ship = base.build_ship(heading=360 * np.random.random())
+                        self.nships[uid] += 1
+                elif base.crystal > base.cost("jet"):
+                    jet = base.build_jet(heading=360 * np.random.random())
 
         # Try to find an enemy target
         target = None
@@ -117,6 +113,7 @@ class PlayerAi:
                         # Simply target the first base
                         t = info[name]["bases"][0]
                         target = [t.x, t.y]
+                        break
 
         # Controlling my vehicles ==============================================
 
@@ -142,6 +139,7 @@ class PlayerAi:
         #     (basically equal to (cos(heading), sin(heading))
         # tank.position (np.ndarray): the (x, y) position as a numpy array
         # tank.uid (str): unique id for the tank
+        # tank.stuck(bool): True if the vehicle is stuck
         #
         # Description of vehicle methods:
         #
@@ -166,31 +164,27 @@ class PlayerAi:
         # Iterate through all my tanks
         if "tanks" in myinfo:
             for tank in myinfo["tanks"]:
-                if (tank.uid in self.previous_positions) and (not tank.stopped):
+                if not tank.stopped:
                     # If the tank position is the same as the previous position,
                     # set a random heading
-                    if all(tank.position == self.previous_positions[tank.uid]):
+                    if tank.stuck:
                         tank.set_heading(np.random.random() * 360.0)
                     # Else, if there is a target, go to the target
                     elif target is not None:
                         tank.goto(*target)
-                # Store the previous position of this tank for the next time step
-                self.previous_positions[tank.uid] = tank.position
 
         # Iterate through all my ships
         if "ships" in myinfo:
             for ship in myinfo["ships"]:
-                if ship.uid in self.previous_positions:
+                if not ship.stopped:
                     # If the ship position is the same as the previous position,
                     # convert the ship to a base if it is far from the owning base,
                     # set a random heading otherwise
-                    if all(ship.position == self.previous_positions[ship.uid]):
+                    if ship.stuck:
                         if ship.get_distance(ship.owner.x, ship.owner.y) > 20:
                             ship.convert_to_base()
                         else:
                             ship.set_heading(np.random.random() * 360.0)
-                # Store the previous position of this ship for the next time step
-                self.previous_positions[ship.uid] = ship.position
 
         # Iterate through all my jets
         if "jets" in myinfo:

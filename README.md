@@ -16,6 +16,8 @@ cd tests/
 python test.py
 ```
 
+Send a link to your repository or copy/paste your code at [https://forms.gle/Ah3LvH9wvdxLH8xg8](https://forms.gle/Ah3LvH9wvdxLH8xg8)
+
 ## Game preview
 
 <table>

@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
-# import simple_ai
 import supremacy_ai
 
 # import my_ai

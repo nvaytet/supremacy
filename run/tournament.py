@@ -7,8 +7,8 @@ import supremacy
 
 
 players = {}
-for repo in glob.glob("*_ai.py"):
-    ai = importlib.import_module(f"{repo.removesuffix('.py')}")
+for repo in glob.glob("*_ai"):
+    ai = importlib.import_module(f"{repo}")
     players[ai.CREATOR] = ai
 
 supremacy.start(

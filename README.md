@@ -4,19 +4,40 @@
 
 ## TL;DR
 
-Get started with:
+1. Create a repository for your AI from [the template](https://github.com/new?template_name=supremacy_ai&template_owner=nvaytet).
+
+2. Get started with:
+
+### conda
 
 ```
-conda create -n <NAME> -c conda-forge python=3.10
+conda create -n <NAME> -c conda-forge python=3.10.*
 conda activate <NAME>
 git clone https://github.com/nvaytet/supremacy.git
+git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
 cd supremacy/
 python -m pip install -e .
 cd tests/
+ln -s ../../<MYPLAYERNAME>_ai .
 python test.py
 ```
 
-Send a link to your repository or copy/paste your code at [https://forms.gle/Ah3LvH9wvdxLH8xg8](https://forms.gle/Ah3LvH9wvdxLH8xg8)
+### venv
+
+```
+git clone https://github.com/nvaytet/supremacy.git
+git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
+cd supremacy/
+python -m venv .<NAME>
+source .<NAME>/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+cd tests/
+ln -s ../../<MYPLAYERNAME>_ai .
+python test.py
+```
+
+Send a link to your repository on Discord.
 
 ## Game preview
 

@@ -48,7 +48,7 @@ def _make_colors(num_colors: int) -> List[Tuple[float, ...]]:
     cols = []
     cmap = plt.get_cmap("gist_ncar")
     for i in range(num_colors):
-        cols.append(cmap(i / (num_colors - 1)))
+        cols.append(cmap(i / max(num_colors - 1, 1)))
     return cols
 
 

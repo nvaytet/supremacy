@@ -7,6 +7,7 @@ from typing import Dict
 
 import numpy as np
 import pyglet
+from matplotlib.colors import to_hex
 
 from . import config
 from .base import BaseProxy
@@ -185,6 +186,26 @@ class Engine:
         # Dump player maps
         for p in self.players.values():
             p.dump_map()
+        # Create a html page with all the player maps as a grid
+        with open("maps.html", "w") as f:
+            f.write(
+                "<html><head><style>img {width: 100%; height: auto;}</style></head>"
+            )
+            # Organise maps in a table
+            f.write("<body><table><tr>")
+            counter = 0
+            for i, p in enumerate(self.players.values()):
+                f.write(
+                    '<td style="font-size: x-large; font-weight: bold; '
+                    f"color:{to_hex(config.colors[i])};"
+                    'text-shadow: 1px 1px 2px black;">'
+                    f'{p.team}<br><a href="{p.team}_map.png">'
+                    f'<img src="{p.team}_map.png"></a></td>'
+                )
+                counter += 1
+                if counter % 5 == 0:
+                    f.write("</tr><tr>")
+            f.write("</tr></table></body></html>")
 
     def update(self, dt: float):
         if self.exiting:

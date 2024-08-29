@@ -3,7 +3,7 @@
 import importlib
 import os
 import time
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pyglet
@@ -23,13 +23,14 @@ class Engine:
     def __init__(
         self,
         players: dict,
-        safe=False,
-        high_contrast=False,
-        test=True,
-        time_limit=300,
-        crystal_boost=1,
-        seed=None,
-        fullscreen=False,
+        safe: bool = False,
+        high_contrast: bool = False,
+        test: bool = True,
+        time_limit: int = 300,
+        crystal_boost: int = 1,
+        seed: Optional[int] = None,
+        fullscreen: bool = False,
+        super_crystal: bool = False,
     ):
         if seed is not None:
             np.random.seed(seed)
@@ -48,6 +49,7 @@ class Engine:
         self.players = {}
         self.explosions = {}
         self.crystal_boost = crystal_boost
+        self._super_crystal = super_crystal
         self.paused = False
         self.previously_paused = False
         self.pause_time = 0
@@ -55,7 +57,10 @@ class Engine:
         self.time_of_last_scoreboard_update = 0
 
         self.game_map = GameMap(
-            nx=self.nx, ny=self.ny, high_contrast=self.high_contrast
+            nx=self.nx,
+            ny=self.ny,
+            high_contrast=self.high_contrast,
+            super_crystal=self._super_crystal,
         )
         self.graphics = Graphics(engine=self, fullscreen=fullscreen)
         self.setup()
@@ -145,8 +150,14 @@ class Engine:
                         )
                     ]
                 )
+                multiplier = (
+                    29
+                    * int(self.game_map._super_crystal == (int(base.x), int(base.y)))
+                    * int(self._super_crystal)
+                ) + 1
                 base.crystal += (
                     self.crystal_boost
+                    * multiplier
                     * 2
                     * (30.0 / config.fps)
                     * len(base.mines)

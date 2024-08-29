@@ -15,7 +15,9 @@ from .tools import periodic_distances, wrap_position
 
 
 class GameMap:
-    def __init__(self, nx: int, ny: int, high_contrast: bool = False):
+    def __init__(
+        self, nx: int, ny: int, high_contrast: bool = False, super_crystal: bool = False
+    ):
         self.nx = nx
         self.ny = ny
         image = np.zeros([self.ny, self.nx])
@@ -30,19 +32,34 @@ class GameMap:
         self.array = np.clip(smooth, 0, 1).astype(int)
         cmap = mpl.colormaps["terrain"]
         norm = Normalize()
+
+        # Find shoreline indices
+        gy, gx = np.gradient(self.array)
+        contour = np.abs(gy) + np.abs(gx)
+        shoreline = contour > 0
+
         if high_contrast:
             to_image = np.flipud(self.array * 255)
             to_image = np.broadcast_to(
                 to_image.reshape(to_image.shape + (1,)), to_image.shape + (3,)
             )
         else:
-            gy, gx = np.gradient(np.flipud(self.array))
-            contour = np.abs(gy) + np.abs(gx)
-            inds = contour > 0
-            ii = np.broadcast_to(inds.reshape(inds.shape + (1,)), inds.shape + (3,))
+            ii = np.flipud(
+                np.broadcast_to(
+                    shoreline.reshape(shoreline.shape + (1,)), shoreline.shape + (3,)
+                )
+            )
             to_image = cmap(norm(np.flipud(smooth)))[..., :3] * 255
             contour_color = np.full_like(to_image, (0, 140, 240))
             to_image[ii] = contour_color[ii]
+
+        if super_crystal:
+            # Select a single random pixel on the shoreline for super crystal
+            j, i = np.where(shoreline)
+            ind = np.random.randint(len(i))
+            self._super_crystal = (i[ind], j[ind])
+        else:
+            self._super_crystal = (None, None)
 
         img = scale_image(Image.fromarray(to_image.astype(np.uint8)), config.scaling)
         self.background_image = pyglet.image.ImageData(
@@ -82,6 +99,9 @@ class GameMap:
                     dist = periodic_distances(i, j, loc[0], loc[1])[0].min()
                     if dist < 2 * config.competing_mine_radius:
                         not_set = True
+                # Do not start base on super crystal
+                if (i, j) == self._super_crystal:
+                    not_set = True
                 # Check for lakes
                 if not not_set:
                     # Ray-trace from (i, j) in 64 directions and find maximum distance

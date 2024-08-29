@@ -34,6 +34,16 @@ class Graphics:
         self.time_left = None
         self.exit_message = None
 
+        # redpixel = pyglet.image.load(ir.files("supremacy") / "resources" / "marker.png")
+        # redpixel.anchor_x = redpixel.width // 2
+        # redpixel.anchor_y = redpixel.height // 2
+        # self.super_crystal = pyglet.sprite.Sprite(
+        #     redpixel,
+        #     x=self.engine.game_map._super_crystal[0] * config.scaling,
+        #     y=self.engine.game_map._super_crystal[1] * config.scaling,
+        #     batch=self.main_batch,
+        # )
+
         self.scoreboard_labels = []
 
         @self.window.event

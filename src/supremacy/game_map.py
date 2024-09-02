@@ -36,7 +36,8 @@ class GameMap:
         # Find shoreline indices
         gy, gx = np.gradient(self.array)
         contour = np.abs(gy) + np.abs(gx)
-        shoreline = contour > 0
+        self.shoreline = contour > 0
+        self.shore_j, self.shore_i = np.where(self.shoreline)
 
         if high_contrast:
             to_image = np.flipud(self.array * 255)
@@ -46,7 +47,8 @@ class GameMap:
         else:
             ii = np.flipud(
                 np.broadcast_to(
-                    shoreline.reshape(shoreline.shape + (1,)), shoreline.shape + (3,)
+                    self.shoreline.reshape(self.shoreline.shape + (1,)),
+                    self.shoreline.shape + (3,),
                 )
             )
             to_image = cmap(norm(np.flipud(smooth)))[..., :3] * 255
@@ -55,9 +57,8 @@ class GameMap:
 
         if super_crystal:
             # Select a single random pixel on the shoreline for super crystal
-            j, i = np.where(shoreline)
-            ind = np.random.randint(len(i))
-            self._super_crystal = (i[ind], j[ind])
+            ind = np.random.randint(len(self.shore_i))
+            self._super_crystal = (self.shore_i[ind], self.shore_j[ind])
         else:
             self._super_crystal = (None, None)
 
@@ -71,33 +72,24 @@ class GameMap:
         )
 
     def add_players(self, players: dict):
-        inds = np.random.choice(
-            np.arange(self.nseeds), size=len(players), replace=False
-        )
         locations = {}
         niter = 0
         for n, player in enumerate(players):
             not_set = True
             while not_set:
                 niter += 1
-                if niter > 500:
+                if niter > 50:
                     raise RuntimeError("Could not find a suitable location for a base")
-                direction = np.random.randint(4)
-                i = self.xseed[inds[n]]
-                j = self.yseed[inds[n]]
-                while self.array[j, i] > 0:
-                    if direction == 0:
-                        i = (i + 1) % self.nx
-                    elif direction == 1:
-                        i = (i - 1) % self.nx
-                    elif direction == 2:
-                        j = (j + 1) % self.ny
-                    elif direction == 3:
-                        j = (j - 1) % self.ny
+
+                # Select a single random pixel on the shoreline for player base
+                ind = np.random.randint(len(self.shore_i))
+                i = self.shore_i[ind]
+                j = self.shore_j[ind]
+
                 not_set = False
                 for loc in locations.values():
                     dist = periodic_distances(i, j, loc[0], loc[1])[0].min()
-                    if dist < 2 * config.competing_mine_radius:
+                    if dist < 5 * config.competing_mine_radius:
                         not_set = True
                 # Do not start base on super crystal
                 if (i, j) == self._super_crystal:

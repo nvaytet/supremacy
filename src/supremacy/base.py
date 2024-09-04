@@ -176,14 +176,15 @@ class Base:
             cost = config.cost[kind]
 
         not_ok = self.crystal < cost
-        if not_ok:
+        if not_ok and (not config.quiet):
             print(f"Not enough crystal to build {kind}")
         return not_ok
 
     def build_mine(self):
         if self.not_enough_crystal("mine"):
             return
-        print(f"Player {self.team} is building a MINE at {self.x}, {self.y}")
+        if not config.quiet:
+            print(f"Player {self.team} is building a MINE at {self.x}, {self.y}")
         self.crystal -= self.mine_cost()
         uid = uuid.uuid4().hex
         self.mines[uid] = Mine(
@@ -203,7 +204,8 @@ class Base:
         """
         if self.not_enough_crystal("tank"):
             return
-        print(f"Player {self.team} is building a TANK at {self.x}, {self.y}")
+        if not config.quiet:
+            print(f"Player {self.team} is building a TANK at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
         tank = Tank(
             x=self.x + self.tank_offset[0],
@@ -231,7 +233,8 @@ class Base:
         """
         if self.not_enough_crystal("ship"):
             return
-        print(f"Player {self.team} is building a SHIP at {self.x}, {self.y}")
+        if not config.quiet:
+            print(f"Player {self.team} is building a SHIP at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
         ship = Ship(
             x=self.x + self.ship_offset[0],
@@ -259,7 +262,8 @@ class Base:
         """
         if self.not_enough_crystal("jet"):
             return
-        print(f"Player {self.team} is building a JET at {self.x}, {self.y}")
+        if not config.quiet:
+            print(f"Player {self.team} is building a JET at {self.x}, {self.y}")
         uid = uuid.uuid4().hex
         jet = Jet(
             x=self.x,

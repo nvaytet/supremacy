@@ -28,4 +28,5 @@ supremacy.start(
     seed=None,  # Set seed to always generate the same map
     high_contrast=False,  # Set to True for high contrast mode
     crystal_boost=1,  # Set to > 1 to artificially increase crystal production
+    quiet=True,
 )

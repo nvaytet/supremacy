@@ -70,6 +70,7 @@ class Config:
         self.small_font = ImageFont.truetype(file, size=10)
         self.large_font = ImageFont.truetype(file, size=16)
         self.medium_font = ImageFont.truetype(file, size=12)
+        self.quiet = False
 
     def initialize(self, nplayers: int, fullscreen=False):
         dy = self.taskbar_height * (not fullscreen)

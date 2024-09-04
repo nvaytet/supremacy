@@ -38,11 +38,12 @@ def fight(players, batch: Any) -> Tuple[dict, dict, dict]:
                     if defender.team not in dead_vehicles:
                         dead_vehicles[defender.team] = []
                     dead_vehicles[defender.team].append(defender.uid)
-                print(
-                    f"{defender.team}'s {defender.kind} was destroyed "
-                    f"by {attacker.team}'s {attacker.kind} at "
-                    f"{defender.x}, {defender.y}"
-                )
+                if not config.quiet:
+                    print(
+                        f"{defender.team}'s {defender.kind} was destroyed "
+                        f"by {attacker.team}'s {attacker.kind} at "
+                        f"{defender.x}, {defender.y}"
+                    )
                 explosions[defender.uid] = Explosion(defender.x, defender.y, batch)
             else:
                 defender.make_avatar()

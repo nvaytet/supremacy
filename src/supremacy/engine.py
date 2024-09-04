@@ -31,6 +31,7 @@ class Engine:
         seed: Optional[int] = None,
         fullscreen: bool = False,
         super_crystal: bool = False,
+        quiet: bool = False,
     ):
         if seed is not None:
             np.random.seed(seed)
@@ -50,6 +51,7 @@ class Engine:
         self.explosions = {}
         self.crystal_boost = crystal_boost
         self._super_crystal = super_crystal
+        config.quiet = quiet
         self.paused = False
         self.previously_paused = False
         self.pause_time = 0
@@ -282,7 +284,8 @@ class Engine:
                     self.base_locations[int(b.y), int(b.x)] = 0
                     self.players[name].remove_base(uid)
             if len(self.players[name].bases) == 0:
-                print(f"Player {name} died!")
+                if not config.quiet:
+                    print(f"Player {name} died!")
                 self.players[name].update_score(len(self.dead_players))
                 self.dead_players.append(name)
                 self.players[name].rip()

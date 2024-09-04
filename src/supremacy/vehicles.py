@@ -250,11 +250,13 @@ class Ship(Vehicle):
         y = int(self.y)
         local_views = player.game_map.view(x=x, y=y, dx=1, dy=1)
         if sum([view.sum() for view in local_views]) < 1:
-            print("No land found around ship, cannot build base on water!")
+            if not config.quiet:
+                print("No land found around ship, cannot build base on water!")
             return
         yy, xx = np.where(local_views[0] == 1)
         if len(xx) == 0:
-            print("Error finding land around ship....")
+            if not config.quiet:
+                print("Error finding land around ship....")
             return
         uid = player.build_base(x=x + xx[0] - 1, y=y + yy[0] - 1)
         player.transformed_ships.append(self.uid)

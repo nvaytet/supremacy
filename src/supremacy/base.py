@@ -163,6 +163,7 @@ class Base:
                 "crystal": self.crystal,
                 "uid": self.uid,
                 "position": self.get_position(),
+                "health": self.health,
             }
         return self._as_info
 

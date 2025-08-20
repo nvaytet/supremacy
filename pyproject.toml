@@ -22,7 +22,7 @@ dependencies = [
     "importlib-resources",
     "matplotlib",
     "numpy",
-    "pyglet >= 2.0",
+    "pyglet==2.0.18",
     "scipy"
 ]
 

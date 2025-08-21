@@ -9,6 +9,8 @@ from matplotlib import font_manager
 import matplotlib.pyplot as plt
 from PIL import Image, ImageFont, ImageDraw
 
+from .bots import Bot
+
 # MAX_HEALTH = 100
 
 
@@ -44,11 +46,11 @@ def _make_base_image(resources: Any, name: str, rgb: Tuple[float, ...]) -> Image
     return Image.fromarray(new_data.astype(np.uint8))
 
 
-def _make_colors(num_colors: int) -> List[Tuple[float, ...]]:
+def _make_colors(players: dict[str, Bot]) -> List[Tuple[float, ...]]:
     cols = []
     cmap = plt.get_cmap("gist_ncar")
-    for i in range(num_colors):
-        cols.append(cmap(i / max(num_colors - 1, 1)))
+    for i, bot in enumerate(players.values()):
+        cols.append(bot.get("color") or cmap(i / max(len(players) - 1, 1)))
     return cols
 
 
@@ -71,13 +73,13 @@ class Config:
         self.large_font = ImageFont.truetype(file, size=16)
         self.medium_font = ImageFont.truetype(file, size=12)
 
-    def initialize(self, nplayers: int, fullscreen=False):
+    def initialize(self, players: dict[str, Bot], fullscreen=False):
         dy = self.taskbar_height * (not fullscreen)
         ref_nx = 1920 - self.scoreboard_width
         ref_ny = 1080 - dy
         max_nx = 3840
         max_ny = 2160
-        area = nplayers * (ref_nx * ref_ny) / 10
+        area = len(players) * (ref_nx * ref_ny) / 10
         ratio = ref_nx / ref_ny
         self.nx = min(max(int(np.sqrt(area * ratio)), ref_nx), max_nx)
         self.ny = min(max(int(np.sqrt(area / ratio)), ref_ny), max_ny)
@@ -88,13 +90,13 @@ class Config:
         screen_height = screen.height - dy
         self.scaling = min(min(screen_width / self.nx, screen_height / self.ny), 1.0)
 
-        self.generate_images(nplayers)
+        self.generate_images(players)
 
-    def generate_images(self, nplayers: int):
+    def generate_images(self, players: dict[str, Bot]):
         img = Image.open(self.resources / "explosion.png")
         self.images = {"explosion": _to_image(scale_image(img, self.scaling))}
-        self.colors = _make_colors(nplayers)
-        for n in range(nplayers):
+        self.colors = _make_colors(players)
+        for n in range(len(players)):
             rgb = self.colors[n]
             self.generate_vehicle_images(n, rgb)
             self.generate_base_images(n, rgb)

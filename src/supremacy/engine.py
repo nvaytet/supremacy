@@ -35,7 +35,7 @@ class Engine:
         if seed is not None:
             np.random.seed(seed)
 
-        config.initialize(nplayers=len(players), fullscreen=fullscreen)
+        config.initialize(players=players, fullscreen=fullscreen)
 
         self.nx = config.nx
         self.ny = config.ny
@@ -45,7 +45,7 @@ class Engine:
         self.dead_players = []
         self.high_contrast = high_contrast
         self.safe = safe
-        self.player_ais = players
+        self.player_ais = {player.name: player.factory() for player in players}
         self.players = {}
         self.explosions = {}
         self.crystal_boost = crystal_boost

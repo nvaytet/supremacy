@@ -18,6 +18,9 @@ class Bot:
     def name(self) -> str:
         return self._config["name"]
 
+    def get(self, key: str) -> Any:
+        return self._config.get(key)
+
     def class_(self) -> type:
         return getattr(
             importlib.import_module(self._package),

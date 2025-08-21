@@ -12,15 +12,15 @@ crystal-boost = 10
 
 # --- Select bots for the game ---
 # Use your bot:
-[[bot]]
+[[player]]
 package = "your_bot"
 
 # Add a number of extra bots:
 # Override the name and color to distinguish them in the game.
-[[bot]]
+[[player]]
 package = "template"
-override = { name = "Bottiglia", color = "#00ff00" }
+override = { name = "Bottiglia", color = "#2fb0ac" }
 
-[[bot]]
+[[player]]
 package = "template"
-override = { name = "Botulf", color = "#00aaa0" }
+override = { name = "Botulf", color = "#eda3bc" }

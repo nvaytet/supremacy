@@ -6,6 +6,7 @@ import importlib_resources as ir
 import numpy as np
 import pyglet
 from matplotlib import font_manager
+from matplotlib.colors import to_rgb
 import matplotlib.pyplot as plt
 from PIL import Image, ImageFont, ImageDraw
 
@@ -50,7 +51,10 @@ def _make_colors(players: dict[str, Bot]) -> List[Tuple[float, ...]]:
     cols = []
     cmap = plt.get_cmap("gist_ncar")
     for i, bot in enumerate(players.values()):
-        cols.append(bot.get("color") or cmap(i / max(len(players) - 1, 1)))
+        if color := bot.get("color"):
+            cols.append(to_rgb(color))
+        else:
+            cols.append(cmap(i / max(len(players) - 1, 1)))
     return cols
 
 

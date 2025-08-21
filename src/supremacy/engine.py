@@ -45,7 +45,7 @@ class Engine:
         self.dead_players = []
         self.high_contrast = high_contrast
         self.safe = safe
-        self.player_ais = {player.name: player.factory() for player in players}
+        self.player_ais = {player.name: player.factory() for player in players.values()}
         self.players = {}
         self.explosions = {}
         self.crystal_boost = crystal_boost

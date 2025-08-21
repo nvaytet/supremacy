@@ -10,11 +10,10 @@ def main():
     args = parse_arguments()
     config = load_config(args.config)
     bots = load_bots(config)
-    bot_factories = {bot.name: bot.factory() for bot in bots}
 
     cfg = config["supremacy"]
     supremacy.start(
-        players=bot_factories,
+        players=bots,
         time_limit=cfg["time-limit"],
         fullscreen=cfg["fullscreen"],
         high_contrast=cfg["high-contrast"],

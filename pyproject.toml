@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.scripts]
-game = "supremacy.__main__:main"
+supremacy = "supremacy.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["./src"]

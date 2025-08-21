@@ -72,8 +72,8 @@ class Engine:
         self.base_locations = np.zeros((self.ny, self.nx), dtype=int)
         player_locations = self.game_map.add_players(players=self.player_ais)
         self.players = {}
-        for i, (name, ai) in enumerate(self.player_ais.items()):
-            p = ai.PlayerAi()
+        for i, (name, ai_factory) in enumerate(self.player_ais.items()):
+            p = ai_factory()
             p.team = name
             self.players[p.team] = Player(
                 ai=p,

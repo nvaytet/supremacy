@@ -1,30 +1,29 @@
 import argparse
+from functools import partial
 from importlib.resources import open_binary
 import importlib
 from pathlib import Path
 import tomllib
+
+import supremacy
+
 
 def main():
     args = parse_arguments()
     config = load_config(args.config)
     bot_configs = load_bot_configs(config)
     bot_classes = load_bot_classes(config, bot_configs)
-    print(config)
-    print(bot_configs)
-    print(bot_classes)
+    bot_factories = make_bot_factories(config, bot_classes, bot_configs)
 
-
-    # players = {name: supremacy_ai for name in names}
-    # # players[my_ai.CREATOR] = my_ai
-
-    # supremacy.start(
-    #     players=players,
-    #     time_limit=8 * 60,  # Time limit in seconds
-    #     fullscreen=False,  # Set to True for fullscreen
-    #     seed=None,  # Set seed to always generate the same map
-    #     high_contrast=False,  # Set to True for high contrast mode
-    #     crystal_boost=1,  # Set to > 1 to artificially increase crystal production
-    # )
+    cfg = config["supremacy"]
+    supremacy.start(
+        players=bot_factories,
+        time_limit=cfg["time-limit"],
+        fullscreen=cfg["fullscreen"],
+        high_contrast=cfg["high-contrast"],
+        crystal_boost=cfg["crystal-boost"],
+        seed=cfg.get("seed", None),
+    )
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Supremacy game")
@@ -42,15 +41,30 @@ def load_bot_config(package_name):
         return tomllib.load(file)
 
 def load_bot_configs(config):
-    return [
-        (cfg["package"], load_bot_config(cfg["package"]))
-        for cfg in config["bots"]
-    ]
+    return {
+        cfg["package"]: load_bot_config(cfg["package"])
+        for cfg in config["bot"]
+    }
 
 def load_bot_classes(config, bot_configs):
-    return {cfg["package"]: getattr(importlib.import_module(cfg["package"]), bot_configs[cfg["package"]])
-        for cfg in config["bots"]}
+    return {
+        cfg["package"]: getattr(
+            importlib.import_module(cfg["package"]),
+            bot_configs[cfg["package"]]["class_name"])
+        for cfg in config["bot"]
+    }
 
+def make_bot_factories(config, bot_classes, bot_configs):
+    base = {
+        bot_configs[package]["name"]: partial(bot_classes[package], team=bot_configs[package]["name"])
+        for package in config["supremacy"]["bots"]
+    }
+    extra_config = config["supremacy"]["extra-bots"]
+    extra = {
+        f"Bot{i}": partial(bot_classes[extra_config["package"]], team=f"Bot{i}")
+        for i in range(extra_config["n"])
+    }
+    return {**base, **extra}
 
 if __name__ == "__main__":
     main()

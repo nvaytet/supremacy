@@ -1,9 +1,3 @@
-[game]
-# Select bots for the game:
-bots = ["testo"]
-# Generate n extra bots from the given package:
-extra-bots = { n = 9, package = "bot_1" }
-
 [supremacy]
 # Time limit in seconds:
 time-limit = 480
@@ -15,3 +9,18 @@ high-contrast = false
 crystal-boost = 10
 # Uncomment and set to a number to always generate the same map:
 # seed = 123
+
+# --- Select bots for the game ---
+# Use your bot:
+[[bot]]
+package = "your_bot"
+
+# Add a number of extra bots:
+# Override the name and color to distinguish them in the game.
+[[bot]]
+package = "template"
+override = { name = "Bottiglia", color = "#00ff00" }
+
+[[bot]]
+package = "template"
+override = { name = "Botulf", color = "#00aaa0" }

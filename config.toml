@@ -1,0 +1,9 @@
+[supremacy]
+bots = ["bot_asd"]
+extra-bots = { n = 9, package = "bot_1" }
+
+[[bot]]
+package = "bot_asd"
+
+[[bot]]
+package = "bot_1"

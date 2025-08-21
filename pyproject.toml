@@ -26,11 +26,14 @@ dependencies = [
     "scipy"
 ]
 
+[project.scripts]
+game = "supremacy.__main__:main"
+
 [tool.setuptools.packages.find]
 where = ["./src"]
 
 [tool.setuptools.package-data]
-supremacy = ["resources/*.png"]
+supremacy = ["resources/*.png", "config.toml"]
 
 [tool.yapf]
 based_on_style = "pep8"

@@ -1,9 +1,17 @@
-[supremacy]
-bots = ["bot_asd"]
+[game]
+# Select bots for the game:
+bots = ["testo"]
+# Generate n extra bots from the given package:
 extra-bots = { n = 9, package = "bot_1" }
 
-[[bot]]
-package = "bot_asd"
-
-[[bot]]
-package = "bot_1"
+[supremacy]
+# Time limit in seconds:
+time-limit = 480
+# Set to true for fullscreen:
+fullscreen = false
+# Set to True for high contrast mode:
+high-contrast = false
+# Set to > 1 to artificially increase crystal production:
+crystal-boost = 10
+# Uncomment and set to a number to always generate the same map:
+# seed = 123

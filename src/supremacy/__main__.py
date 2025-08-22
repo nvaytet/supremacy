@@ -14,11 +14,14 @@ def main():
     cfg = config["supremacy"]
     supremacy.start(
         players=bots,
-        time_limit=cfg["time-limit"],
-        fullscreen=cfg["fullscreen"],
-        high_contrast=cfg["high-contrast"],
-        crystal_boost=cfg["crystal-boost"],
+        time_limit=cfg.get("time-limit", 300),
+        fullscreen=cfg.get("fullscreen", False),
+        high_contrast=cfg.get("high-contrast", False),
+        crystal_boost=cfg.get("crystal-boost", 1),
         seed=cfg.get("seed", None),
+        test=cfg.get("test", True),
+        safe=cfg.get("safe", False),
+        super_crystal=cfg.get("super-crystal", False),
     )
 
 

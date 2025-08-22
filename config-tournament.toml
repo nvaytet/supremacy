@@ -15,7 +15,7 @@ crystal-boost = 1
 
 # Make sure the game doesn't crash when an AI does
 safe = true
-super_crystal = true
+super-crystal = true
 
 # --- Select bots for the game ---
 # [[player]]

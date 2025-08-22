@@ -2,42 +2,56 @@
 
 # Supremacy
 
-## TL;DR
+## Installation
 
-1. Create a repository for your AI from [the template](https://github.com/new?template_name=supremacy_ai&template_owner=nvaytet).
+### Launcher
 
-2. Get started with:
+If you have been given a game code, you can use the AI Game Launcher to install and configure the game.
 
-### conda
+1. Download and run the [AI Game Launcher](https://jl-wynen.github.io/aigl/)
+2. Install the game through the GUI.
+3. Follow the instructions in the launcher to set up your environment and run Supremacy.
+
+### Manually
+
+1. Download the game and bots
 
 ```
-conda create -n <NAME> -c conda-forge python=3.10.*
+mkdir supremacy
+cd supremacy
+git clone https://github.com/nvaytet/supremacy.git
+git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
+git clone https://github.com/nvaytet/supremacy_ai.git template_ai
+```
+
+2. Create a Python environment
+
+#### conda
+
+```
+conda create -n <NAME> -c conda-forge python=3.11.* pip
 conda activate <NAME>
-git clone https://github.com/nvaytet/supremacy.git
-git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
-cd supremacy/
-python -m pip install -e .
-cd tests/
-ln -s ../../<MYPLAYERNAME>_ai .
-python test.py
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e template_ai
 ```
 
-### venv
+#### venv
 
 ```
-git clone https://github.com/nvaytet/supremacy.git
-git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
-cd supremacy/
-python -m venv .<NAME>
-source .<NAME>/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-python -m pip install -e .
-cd tests/
-ln -s ../../<MYPLAYERNAME>_ai .
-python test.py
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e template_ai
 ```
 
-Send a link to your repository on Discord.
+3. Configure the game byt pointing `supremacy/config.toml` at your player AI and any number of template AIs.
+
+4. Run the game
+
+```
+supremacy supremacy/config.toml
+```
+
+5. Send a link to your repository to your game master.
 
 ## Game preview
 
@@ -190,4 +204,3 @@ While the game is running, you can hit `P` on the keyboard.
 This will pause the game.
 You can edit your AI code.
 When the game resumes (hit `P` again), it will reload your AI module.
-

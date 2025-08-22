@@ -56,19 +56,28 @@ class BuildQueue:
         self.queue = queue
         self.cycle = cycle
         self.inds = {}
+        self.wants_to_build = {}
 
     def __call__(self, base):
         if base.uid not in self.inds:
             self.inds[base.uid] = 0
-        kind = self.queue[self.inds[base.uid]]
-        if base.crystal > base.cost(kind):
-            kwargs = {}
-            if kind != "mine":
-                kwargs["heading"] = 360 * np.random.random()
-            build = getattr(base, f"build_{kind}")(**kwargs)
-            if self.inds[base.uid] == len(self.queue) - 1:
-                if self.cycle:
-                    self.inds[base.uid] = 0
-            else:
-                self.inds[base.uid] += 1
-            return build
+        if base.uid not in self.wants_to_build:
+            kind = self.queue[self.inds[base.uid]]
+            if not isinstance(kind, str):
+                kind = kind()
+            self.wants_to_build[base.uid] = kind
+
+        if base.uid in self.wants_to_build:
+            kind = self.wants_to_build[base.uid]
+            if base.crystal > base.cost(kind):
+                kwargs = {}
+                if kind != "mine":
+                    kwargs["heading"] = 360 * np.random.random()
+                build = getattr(base, f"build_{kind}")(**kwargs)
+                if self.inds[base.uid] == len(self.queue) - 1:
+                    if self.cycle:
+                        self.inds[base.uid] = 0
+                else:
+                    self.inds[base.uid] += 1
+                del self.wants_to_build[base.uid]
+                return build

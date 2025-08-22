@@ -6,7 +6,7 @@ fullscreen = false
 # Set to True for high contrast mode:
 high-contrast = false
 # Set to > 1 to artificially increase crystal production:
-crystal-boost = 10
+crystal-boost = 1
 # Uncomment and set to a number to always generate the same map:
 # seed = 123
 

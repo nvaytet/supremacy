@@ -1,4 +1,6 @@
 [supremacy]
+# Uncomment and set to a number to always generate the same map:
+# seed = 123
 # Time limit in seconds:
 time-limit = 480
 # Set to true for fullscreen:
@@ -7,8 +9,6 @@ fullscreen = false
 high-contrast = false
 # Set to > 1 to artificially increase crystal production:
 crystal-boost = 1
-# Uncomment and set to a number to always generate the same map:
-# seed = 123
 
 # --- Select bots for the game ---
 # Use your bot:

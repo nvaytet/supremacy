@@ -21,7 +21,7 @@ mkdir supremacy
 cd supremacy
 git clone https://github.com/nvaytet/supremacy.git
 git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
-git clone https://github.com/nvaytet/supremacy_ai.git template_ai
+git clone https://github.com/nvaytet/supremacy_ai.git
 ```
 
 2. Create a Python environment
@@ -31,7 +31,7 @@ git clone https://github.com/nvaytet/supremacy_ai.git template_ai
 ```
 conda create -n <NAME> -c conda-forge python=3.11.* pip
 conda activate <NAME>
-python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e template_ai
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e supremacy_ai
 ```
 
 #### venv
@@ -40,7 +40,7 @@ python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e template_ai
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e template_ai
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e supremacy_ai
 ```
 
 3. Configure the game byt pointing `supremacy/config.toml` at your player AI and any number of template AIs.
@@ -169,9 +169,10 @@ supremacy supremacy/config.toml
 - To play the game, you will have to create a Python program.
 - It should contain a class named `PlayerAI` and that class should have a method named `run`.
 - Every time step, the `run` method will be called, and it will be inside that function that you should control your vehicles, decide what to build, etc...
-- You are provided with a `template_ai.py` to give you an example.
+- You are provided with a `supremacy_ai` package to give you an example.
 
-Look at the comments in the `template_ai.py` for details on what information is available to you at every time step and what methods can be called.
+Look at the comments in the `simple_ai.py` (in `supremacy_ai/src/supremacy_ai/`) for details on what information is available to you at every time step and what methods can be called.
+If you want to start from a template with less pre-filled logic, use `barebones_ai.py` instead and adjust `__init__.py` accordingly.
 
 ### `game_map`
 

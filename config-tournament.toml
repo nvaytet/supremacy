@@ -1,0 +1,22 @@
+[supremacy]
+# Run a tournament:
+test = false
+
+# Uncomment and set to a number to always generate the same map:
+# seed = 123
+# Time limit in seconds:
+time-limit = 480
+# Set to true for fullscreen:
+fullscreen = true
+# Set to True for high contrast mode:
+high-contrast = false
+# Set to > 1 to artificially increase crystal production:
+crystal-boost = 1
+
+# Make sure the game doesn't crash when an AI does
+safe = true
+super-crystal = true
+
+# --- Select bots for the game ---
+# [[player]]
+# package = ""

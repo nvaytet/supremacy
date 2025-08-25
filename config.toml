@@ -1,0 +1,26 @@
+[supremacy]
+# Uncomment and set to a number to always generate the same map:
+# seed = 123
+# Time limit in seconds:
+time-limit = 480
+# Set to true for fullscreen:
+fullscreen = false
+# Set to True for high contrast mode:
+high-contrast = false
+# Set to > 1 to artificially increase crystal production:
+crystal-boost = 1
+
+# --- Select bots for the game ---
+# Use your bot:
+[[player]]
+package = "your_bot"
+
+# Add a number of extra bots:
+# Override the name and color to distinguish them in the game.
+[[player]]
+package = "supremacy_ai"
+overrides = { name = "Bottiglia", color = "#2fb0ac" }
+
+[[player]]
+package = "supremacy_ai"
+overrides = { name = "Botulf", color = "#eda3bc" }

@@ -2,42 +2,56 @@
 
 # Supremacy
 
-## TL;DR
+## Installation
 
-1. Create a repository for your AI from [the template](https://github.com/new?template_name=supremacy_ai&template_owner=nvaytet).
+### Launcher
 
-2. Get started with:
+If you have been given a game code, you can use the AI Game Launcher to install and configure the game.
 
-### conda
+1. Download and run the [AI Game Launcher](https://jl-wynen.github.io/aigl/)
+2. Install the game through the GUI.
+3. Follow the instructions in the launcher to set up your environment and run Supremacy.
+
+### Manually
+
+1. Download the game and bots
 
 ```
-conda create -n <NAME> -c conda-forge python=3.10.*
+mkdir supremacy
+cd supremacy
+git clone https://github.com/nvaytet/supremacy.git
+git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
+git clone https://github.com/nvaytet/supremacy_ai.git
+```
+
+2. Create a Python environment
+
+#### conda
+
+```
+conda create -n <NAME> -c conda-forge python=3.11.* pip
 conda activate <NAME>
-git clone https://github.com/nvaytet/supremacy.git
-git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
-cd supremacy/
-python -m pip install -e .
-cd tests/
-ln -s ../../<MYPLAYERNAME>_ai .
-python test.py
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e supremacy_ai
 ```
 
-### venv
+#### venv
 
 ```
-git clone https://github.com/nvaytet/supremacy.git
-git clone https://github.com/<USERNAME>/<MYPLAYERNAME>_ai.git
-cd supremacy/
-python -m venv .<NAME>
-source .<NAME>/bin/activate
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-python -m pip install -e .
-cd tests/
-ln -s ../../<MYPLAYERNAME>_ai .
-python test.py
+python -m pip install -e supremacy -e <MYPLAYERNAME>_ai -e supremacy_ai
 ```
 
-Send a link to your repository on Discord.
+3. Configure the game byt pointing `supremacy/config.toml` at your player AI and any number of template AIs.
+
+4. Run the game
+
+```
+supremacy supremacy/config.toml
+```
+
+5. Send a link to your repository to your game master.
 
 ## Game preview
 
@@ -155,9 +169,10 @@ Send a link to your repository on Discord.
 - To play the game, you will have to create a Python program.
 - It should contain a class named `PlayerAI` and that class should have a method named `run`.
 - Every time step, the `run` method will be called, and it will be inside that function that you should control your vehicles, decide what to build, etc...
-- You are provided with a `template_ai.py` to give you an example.
+- You are provided with a `supremacy_ai` package to give you an example.
 
-Look at the comments in the `template_ai.py` for details on what information is available to you at every time step and what methods can be called.
+Look at the comments in the `simple_ai.py` (in `supremacy_ai/src/supremacy_ai/`) for details on what information is available to you at every time step and what methods can be called.
+If you want to start from a template with less pre-filled logic, use `barebones_ai.py` instead and adjust `__init__.py` accordingly.
 
 ### `game_map`
 
@@ -190,4 +205,3 @@ While the game is running, you can hit `P` on the keyboard.
 This will pause the game.
 You can edit your AI code.
 When the game resumes (hit `P` again), it will reload your AI module.
-

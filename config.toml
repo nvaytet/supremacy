@@ -18,9 +18,9 @@ package = "your_bot"
 # Add a number of extra bots:
 # Override the name and color to distinguish them in the game.
 [[player]]
-package = "template"
-override = { name = "Bottiglia", color = "#2fb0ac" }
+package = "template_ai"
+overrides = { name = "Bottiglia", color = "#2fb0ac" }
 
 [[player]]
-package = "template"
-override = { name = "Botulf", color = "#eda3bc" }
+package = "template_ai"
+overrides = { name = "Botulf", color = "#eda3bc" }
